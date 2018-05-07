@@ -1,4 +1,4 @@
-package com.example.ldy.project_witt;
+package com.db.witt.project_witt;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

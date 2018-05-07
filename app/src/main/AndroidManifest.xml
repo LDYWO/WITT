@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.ldy.project_witt">
+    package="com.db.witt.project_witt">
 
     <application
         android:allowBackup="true"
@@ -9,8 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDmZR1YYLoiXYaKi-AQM0QyTNIl3FxFcEA" />
+
         <activity
-            android:name=".SplashActivity"
+            android:name="com.db.witt.project_witt.SplashActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -20,10 +25,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".FindActivity" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name="com.db.witt.project_witt.LoginActivity" />
+        <activity android:name="com.db.witt.project_witt.RegisterActivity" />
+        <activity android:name="com.db.witt.project_witt.FindActivity" />
+        <activity android:name="com.db.witt.project_witt.MainActivity"></activity>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.example.ldy.project_witt;
+package com.db.witt.project_witt;
 
 import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +19,7 @@ public class FindActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_find);
 
         userEmail = (EditText)findViewById(R.id.idText);
+
         findButton = (Button)findViewById(R.id.submitButton);
         findButton.setOnClickListener(this);
 

@@ -1,6 +1,5 @@
-package com.example.ldy.project_witt;
+package com.db.witt.project_witt;
 
-import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;

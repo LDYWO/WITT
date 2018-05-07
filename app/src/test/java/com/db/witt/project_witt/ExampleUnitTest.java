@@ -1,4 +1,4 @@
-package com.example.ldy.project_witt;
+package com.db.witt.project_witt;
 
 import org.junit.Test;
 

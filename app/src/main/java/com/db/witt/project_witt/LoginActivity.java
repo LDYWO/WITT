@@ -1,6 +1,5 @@
-package com.example.ldy.project_witt;
+package com.db.witt.project_witt;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,7 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         userID = (EditText)findViewById(R.id.idText);
         userPassword = (EditText)findViewById(R.id.passwordText);
@@ -32,6 +31,8 @@ public class LoginActivity extends AppCompatActivity {
         loginBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent loginIntent = new Intent(LoginActivity.this, MainActivity.class); // Intent 전달을 이용한 액티비티 전환
+                LoginActivity.this.startActivity(loginIntent);
                 // TODO!: 로그인 인증 (프로그레스 바 추가)
                 // TODO!: 로그인 인증 완료 시 메인 액티비티로 이동, 실패 시 에러 메시지 출력
             }
