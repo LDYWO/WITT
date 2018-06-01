@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WITT</string>
+    <string name="title_activity_write_review">WriteReviewActivity</string>
 </resources>

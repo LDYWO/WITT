@@ -1,0 +1,157 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context="com.example.user.yakhae_demo.WriteReviewActivity">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />v
+
+        <ImageView
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="40dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="22dp"
+            android:layout_below="@+id/toolbar"
+            android:src="@drawable/logo"
+            android:id="@+id/medicine_image"
+            tools:ignore="NotSibling" />
+
+        <TextView
+            android:id="@+id/company_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginBottom="5dp"
+            android:layout_above="@+id/medicine_name"
+            android:layout_toEndOf="@+id/medicine_image"
+            android:layout_toRightOf="@+id/medicine_image"
+            android:text="화장실 위치" />
+
+        <TextView
+            android:id="@+id/medicine_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/medicine_image"
+            android:layout_toRightOf="@+id/medicine_image"
+            android:layout_alignBottom="@+id/medicine_image"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginBottom="30dp"
+            android:text="화장실 이름"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/rataing_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/ratingbar"
+            android:layout_marginEnd="29dp"
+            android:layout_marginRight="29dp"
+            android:layout_toLeftOf="@+id/ratingbar"
+            android:layout_toStartOf="@+id/ratingbar"
+            android:layout_marginBottom="5dp"
+            android:text="평점"
+            android:textSize="20dp" />
+
+        <RatingBar
+            android:id="@+id/ratingbar"
+            style="?android:attr/ratingBarStyleIndicator"
+            android:theme="@style/RatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/medicine_image"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:stepSize="0.5"
+            android:isIndicator="false"
+            android:numStars="5"
+            android:rating="0"
+            />
+
+        <ImageView
+            android:id="@+id/thumb_up_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/rataing_title"
+            android:layout_below="@+id/ratingbar"
+            app:srcCompat="@drawable/ic_thumb_up" />
+
+        <TextView
+            android:id="@+id/good_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/thumb_up_image"
+            android:layout_alignEnd="@+id/medicine_image"
+            android:layout_marginBottom="5dp"
+            android:text="좋았던 점"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/good_review_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@drawable/edit_text_box"
+            android:layout_below="@id/good_title"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:inputType="text"
+            android:imeOptions="actionDone"
+            android:hint="*이용한 화장실의 자세한 리뷰를 남겨주세요.\n\n청결도 및 냄새, 편의성 등\n\n\n"
+            android:textColor="@color/GREY"
+            android:textSize="15dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/rataing_title"
+            android:layout_below="@+id/good_review_edittext"
+            android:layout_marginTop="27dp"
+            app:srcCompat="@drawable/ic_thumb_down"
+            android:id="@+id/thumb_down_image" />
+
+        <TextView
+            android:id="@+id/bad_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/thumb_down_image"
+            android:layout_alignStart="@+id/good_title"
+            android:layout_marginBottom="5dp"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:text="아쉬웠던 점"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/bad_review_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@drawable/edit_text_box"
+            android:layout_below="@id/bad_title"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:hint="*이용한 화장실의 자세한 리뷰를 남겨주세요.\n\n악취, 안전성 문제 등\n\n\n"
+            android:inputType="text"
+            android:imeOptions="actionDone"
+            android:textColor="@color/GREY"
+            android:textSize="15dp"/>
+
+    </RelativeLayout>
+</ScrollView>

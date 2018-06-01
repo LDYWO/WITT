@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#00ff0000">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="#00ff0000">
+
+                <TextView
+                    android:id="@+id/user_nickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:text="유저 닉네임"
+                    android:textSize="13dp"
+                    android:textColor="@color/BLACK"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/register_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/user_nickname"
+                    android:text="작성 시간"
+                    android:textSize="8dp"
+                    android:textColor="@color/BLACK"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toRightOf="@+id/user_nickname" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00ff0000">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="댓글 내용"
+                    android:id="@+id/comment"
+                    android:layout_marginLeft="10dp"
+                    android:layout_centerVertical="true"
+                    android:textSize="13dp"
+                    android:textColor="@color/BLACK" />
+
+            </RelativeLayout>
+</LinearLayout>

@@ -9,13 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDmZR1YYLoiXYaKi-AQM0QyTNIl3FxFcEA" />
 
         <activity
-            android:name="com.db.witt.project_witt.SplashActivity"
+            android:name=".SplashActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -25,10 +24,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.db.witt.project_witt.LoginActivity" />
-        <activity android:name="com.db.witt.project_witt.RegisterActivity" />
-        <activity android:name="com.db.witt.project_witt.FindActivity" />
-        <activity android:name="com.db.witt.project_witt.MainActivity"></activity>
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".FindActivity" />
+        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".WriteReviewActivity"
+            android:label="@string/title_activity_write_review"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".ReviewActivity" />
+        <activity android:name=".MypageActivity"></activity>
     </application>
 
 </manifest>
