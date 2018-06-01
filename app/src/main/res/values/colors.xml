@@ -7,4 +7,5 @@
     <color name="BLACK">#000000</color> <!-- 검정색 -->
     <color name="GREY">#b8babc</color> <!-- 연한 회색-->
     <color name="RED">#e53434</color> <!-- 붉은색 -->
+    <color name="duskYellow">#f7d116</color> <!-- 진노랑 -->
 </resources>
