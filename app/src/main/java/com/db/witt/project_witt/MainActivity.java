@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         LatLng SEOUL = new LatLng(37.56, 126.97); // LatLng 생성; 좌표 객체 생성

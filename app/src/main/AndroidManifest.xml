@@ -33,7 +33,9 @@
             android:label="@string/title_activity_write_review"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".ReviewActivity" />
-        <activity android:name=".MypageActivity"></activity>
+        <activity android:name=".MypageActivity" />
+        <activity android:name=".EditMyInfoActivity" />
+        <activity android:name=".SettingActivity"></activity>
     </application>
 
 </manifest>

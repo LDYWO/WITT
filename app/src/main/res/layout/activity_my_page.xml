@@ -1,9 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MypageActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_weight="1"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:popupTheme="@style/PopupOverlay"
+        app:title="마이페이지"/>
+
+    <LinearLayout
+        android:id="@+id/user_info"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/user_info_border">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_account_circle"
+            android:id="@+id/user_image"
+            android:background="#00ff0000"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"/>
+
+        <LinearLayout
+            android:layout_marginLeft="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#00ff0000">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="horizontal"
+                android:background="#00ff0000"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/writer_nickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="3dp"
+                    android:text="작성자 닉네임"
+                    android:textColor="@color/BLACK"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="horizontal"
+                android:background="#00ff0000"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="연령대"
+                    android:id="@+id/user_age"
+                    android:layout_gravity="center"
+                    android:padding="3dp"
+                    android:textColor="@color/BLACK" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="성별"
+                    android:id="@+id/user_gender"
+                    android:layout_gravity="center"
+                    android:padding="3dp"
+                    android:textColor="@color/RED"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/buttonPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/user_info">
+        <Button
+            android:id="@+id/setting_user_info_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="내 정보 수정"
+            android:background="@drawable/user_info_border"
+            />
+        <Button
+            android:id="@+id/settings_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/user_info_border"
+            android:text="설정"
+            />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/review_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonPanel">
+        <Button
+            android:id="@+id/more_review_btn"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:drawableLeft="@drawable/ic_rate_review"
+            android:text="   내 리뷰"
+            android:textAlignment="textStart"
+            android:background="#00ff0000"
+            android:textColor="@color/BLACK"
+            android:layout_gravity="start"
+            android:enabled="false"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="190dp"
+            android:layout_alignParentEnd="true"
+            android:textSize="9dp"
+            android:text="작성한 리뷰 모아 보기"
+            android:textColor="@color/GREY" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/like_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/review_title">
+        <Button
+            android:id="@+id/more_like_btn"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:drawableLeft="@drawable/ic_favorite"
+            android:text="   좋아요 "
+            android:textAlignment="textStart"
+            android:background="#00ff0000"
+            android:textColor="@color/BLACK"
+            android:layout_gravity="start"
+            android:enabled="false"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="155dp"
+            android:layout_alignParentEnd="true"
+            android:textSize="9dp"
+            android:text="좋아한 위치의 화장실 모아보기"
+            android:textColor="@color/GREY" />
+    </RelativeLayout>
+
+</RelativeLayout>
