@@ -59,26 +59,26 @@
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:text="Small Text"
-                            android:id="@+id/tv_user_type"
+                            android:id="@+id/tv_toilet_address"
                             android:textSize="13dp" />
 
                         <TextView
-                            android:layout_below="@+id/tv_user_type"
+                            android:layout_below="@+id/tv_toilet_address"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:text="Medium Text"
-                            android:id="@+id/tv_title"
+                            android:id="@+id/tv_toilet_name"
                             android:textSize="16dp" />
 
                         <TextView
-                            android:id="@+id/tv_drug_type"
+                            android:id="@+id/tv_open_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/tv_user_type"
+                            android:layout_below="@+id/tv_toilet_address"
                             android:layout_marginTop="7dp"
                             android:layout_marginLeft="8dp"
-                            android:layout_toRightOf="@+id/tv_title"
+                            android:layout_toRightOf="@+id/tv_toilet_name"
                             android:text="Small Text"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textSize="10dp" />
