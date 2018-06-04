@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DetailAndReviewActivity">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/PopupOverlay"
+            app:title="화장실 정보 및 리뷰"/>
+
+        <TextView
+            android:id="@+id/toilet_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:text="화장실 이름"
+            android:textSize="10pt"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/toilet_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:text="화장실 주소"
+            android:textColor="@color/GREY" />
+
+        <TextView
+            android:id="@+id/toilet_open_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:text="개방 시간"
+            android:textColor="@color/RED" />
+
+        <RatingBar
+            android:id="@+id/ratingbar"
+            style="?android:attr/ratingBarStyleIndicator"
+            android:theme="@style/RatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:rating="0"
+            android:stepSize="0.1" />
+
+        <TextView
+            android:id="@+id/rating_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="7dp"
+            android:padding="5dp"
+            android:text="평점" />
+
+        <TextView
+            android:id="@+id/ingre_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="   화장실 정보"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:padding="5dp"
+            android:textColor="@color/colorPrimary"
+            android:background="#dddddd"/>
+
+        <TextView
+            android:id="@+id/toilet_type_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_below="@+id/ingre_title"
+            android:background="@drawable/review_border"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:text="공중화장실/개방화장실"/>
+
+        <TextView
+            android:id="@+id/man_toilet_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:gravity="center"
+            android:layout_below="@+id/toilet_type_textview"
+            android:background="@drawable/review_border"
+            android:textAlignment="center"
+            android:text="남자 대/소변기 수"/>
+
+        <TextView
+            android:id="@+id/woman_toilet_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:gravity="center"
+            android:layout_below="@+id/man_toilet_textview"
+            android:background="@drawable/review_border"
+            android:textAlignment="center"
+            android:text="여자 대변기 수"/>
+
+        <TextView
+            android:id="@+id/management_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:gravity="center"
+            android:layout_below="@+id/woman_toilet_textview"
+            android:background="@drawable/review_border"
+            android:textAlignment="center"
+            android:text="관리기관명 및 전화번호"/>
+
+
+        <TextView
+            android:id="@+id/review_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="   리뷰"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:padding="5dp"
+            android:textColor="@color/colorPrimary"
+            android:background="#dddddd"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.RecyclerView
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:id="@+id/rv">
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="20dp"
+            app:srcCompat="@drawable/ic_edit"
+            app:backgroundTint="@color/colorPrimary"
+            tools:ignore="VectorDrawableCompat" />
+</LinearLayout>

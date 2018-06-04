@@ -1,6 +1,6 @@
 package com.db.witt.project_witt;
 
-public class Toilet_info {
+public class Toilet_info_item {
     private String division;
     private String toilet_name;
     private String toilet_address1;
@@ -23,10 +23,10 @@ public class Toilet_info {
     private String longitude;
     private String rating;
 
-    public Toilet_info(String division,String toilet_name,String toilet_address1, String toilet_address2,String unisex_toilet, String man_toilet_bowl_num,String man_urinal_num,
-                       String man_disabled_toilet_bowl_num,String man_disabled_urinal_num,String man_child_toilet_bowl_num, String man_child_urinal_num,String woman_toilet_bowl_num,
-                       String woman_disabled_toilet_bowl_num,String woman_child_toilet_bowl_num, String management_name,String phone_number,String open_time, String installation_year,
-                       String latitude, String longitude, String rating) {
+    public Toilet_info_item(String division, String toilet_name, String toilet_address1, String toilet_address2, String unisex_toilet, String man_toilet_bowl_num, String man_urinal_num,
+                            String man_disabled_toilet_bowl_num, String man_disabled_urinal_num, String man_child_toilet_bowl_num, String man_child_urinal_num, String woman_toilet_bowl_num,
+                            String woman_disabled_toilet_bowl_num, String woman_child_toilet_bowl_num, String management_name, String phone_number, String open_time, String installation_year,
+                            String latitude, String longitude, String rating) {
         this.division = division;
         this.toilet_name = toilet_name;
         this.toilet_address1 = toilet_address1;

@@ -2,6 +2,7 @@ package com.db.witt.project_witt;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -35,7 +36,7 @@ public class Toilet_info_Adapter extends RecyclerView.Adapter<Toilet_info_Adapte
     /** 정보 및 이벤트 처리는 이 메소드에서 구현 **/
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-
+        final int pos = position;
         final HashMap<String,String> noticeItem = toilet_info_List.get(position);
 
         holder.tv_toilet_address.setText(noticeItem.get("toilet_address2")); //화장실 주소
@@ -43,6 +44,19 @@ public class Toilet_info_Adapter extends RecyclerView.Adapter<Toilet_info_Adapte
         holder.tv_open_time.setText(noticeItem.get("open_time")); //여는 시간
         holder.ratingbar.setRating(Float.valueOf(noticeItem.get("rating")));//평점
         holder.rating_num.setText(noticeItem.get("rating")); //평점
+
+        holder.cv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(context, DetailAndReviewActivity.class);
+                intent.putExtra("toilet_address2", toilet_info_List.get(pos).get("toilet_address2"));
+                intent.putExtra("toilet_name", toilet_info_List.get(pos).get("toilet_name"));
+                intent.putExtra("open_time", toilet_info_List.get(pos).get("open_time"));
+                intent.putExtra("rating", toilet_info_List.get(pos).get("rating"));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
