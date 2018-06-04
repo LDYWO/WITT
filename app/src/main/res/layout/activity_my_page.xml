@@ -48,12 +48,12 @@
                 android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/writer_nickname"
+                    android:id="@+id/userNickname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="3dp"
-                    android:text="작성자 닉네임"
+                    android:text="닉네임"
                     android:textColor="@color/BLACK"
                     android:textStyle="bold" />
 
@@ -70,7 +70,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="연령대"
-                    android:id="@+id/user_age"
+                    android:id="@+id/userAge"
                     android:layout_gravity="center"
                     android:padding="3dp"
                     android:textColor="@color/BLACK" />
@@ -79,7 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="성별"
-                    android:id="@+id/user_gender"
+                    android:id="@+id/userGender"
                     android:layout_gravity="center"
                     android:padding="3dp"
                     android:textColor="@color/RED"/>
@@ -95,7 +95,7 @@
         android:orientation="horizontal"
         android:layout_below="@+id/user_info">
         <Button
-            android:id="@+id/setting_user_info_button"
+            android:id="@+id/editUserInfoBt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -103,7 +103,7 @@
             android:background="@drawable/user_info_border"
             />
         <Button
-            android:id="@+id/settings_button"
+            android:id="@+id/settingBt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -118,7 +118,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/buttonPanel">
         <Button
-            android:id="@+id/more_review_btn"
+            android:id="@+id/myreviewBt"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="10dp"
             android:layout_width="match_parent"
@@ -130,7 +130,7 @@
             android:background="#00ff0000"
             android:textColor="@color/BLACK"
             android:layout_gravity="start"
-            android:enabled="false"/>
+            android:enabled="true"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -149,7 +149,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/review_title">
         <Button
-            android:id="@+id/more_like_btn"
+            android:id="@+id/mylikeBt"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="10dp"
             android:layout_width="match_parent"
@@ -161,7 +161,7 @@
             android:background="#00ff0000"
             android:textColor="@color/BLACK"
             android:layout_gravity="start"
-            android:enabled="false"/>
+            android:enabled="true"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
