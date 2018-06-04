@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.db.witt.project_witt">
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -40,7 +40,9 @@
         <activity android:name=".ReviewActivity" />
         <activity android:name=".MypageActivity" />
         <activity android:name=".EditMyInfoActivity" />
-        <activity android:name=".SettingActivity"></activity>
+        <activity android:name=".SettingActivity" />
+        <activity android:name=".MyReviewActivity" />
+        <activity android:name=".LikeActivity"></activity>
     </application>
 
 </manifest>
