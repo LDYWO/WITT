@@ -41,6 +41,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -60,7 +61,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements GoogleMap.OnInfoWindowClickListener,OnMapReadyCallback {
 
     String myJSON;
 
@@ -147,17 +148,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         String latitude = c.getString(TAG_LATITUDE);
                         String longitude = c.getString(TAG_LONGITUDE);
 
-                        HashMap<String, String> toilets = new HashMap<String, String>();
+                        if(getDistance(mLatitude,mLongitude,Double.valueOf(latitude),Double.valueOf(longitude))<1000){
 
-                        toilets.put(TAG_TOILET_ADD, address);
-                        toilets.put(TAG_TOILET_NAME, toilet_name);
-                        toilets.put(TAG_OPEN_TIME, open_time);
-                        toilets.put(TAG_RATING, rating);
+                            HashMap<String, String> toilets = new HashMap<String, String>();
 
-                        toilet_info_list.add(toilets);
+                            toilets.put(TAG_TOILET_ADD, address);
+                            toilets.put(TAG_TOILET_NAME, toilet_name);
+                            toilets.put(TAG_OPEN_TIME, open_time);
+                            toilets.put(TAG_RATING, rating);
 
-                        makeMaker(latitude,longitude);
-
+                            toilet_info_list.add(toilets);
+                        }
+                        makeMaker(latitude,longitude, address, toilet_name, open_time, rating);
                     }
 
                     toilet_info_adapter = new Toilet_info_Adapter(getApplicationContext(),toilet_info_list);
@@ -172,6 +174,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         MainRequest mainRequest = new MainRequest("0", responseListener);
         RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
         queue.add(mainRequest);
+    }
+
+    public double getDistance(double lat1 , double lng1 , double lat2 , double lng2 ){
+        double distance;
+
+        Location locationA = new Location("point A");
+        locationA.setLatitude(lat1);
+        locationA.setLongitude(lng1);
+
+        Location locationB = new Location("point B");
+        locationB.setLatitude(lat2);
+        locationB.setLongitude(lng2);
+
+        distance = locationA.distanceTo(locationB);
+
+        return distance;
     }
 
     Menu menu_main;
@@ -266,40 +284,58 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         this.googleMap = googleMap;
 
-        //지도타입 - 일반
-        this.googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        this.googleMap.getUiSettings().setZoomControlsEnabled(true);
+        this.googleMap.setMinZoomPreference(11);
 
-        //나의 위치 설정
-        LatLng position = new LatLng(mLatitude , mLongitude);
-        MarkerOptions makerOptions = new MarkerOptions();
-        makerOptions // LatLng에 대한 어레이를 만들어서 이용할 수도 있다.
-                .position(new LatLng(Double.valueOf(mLatitude), Double.valueOf(mLongitude)))
-                .title("마커"); // 타이틀.
-        this.googleMap.addMarker(makerOptions);
+        LatLng position = new LatLng(mLatitude, mLongitude);
 
-        //화면중앙의 위치와 카메라 줌비율
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(position)
+                .title("내 위치");
+
+        InfoWindowData info = new InfoWindowData();
+        info.setOpen_time("none");
+        info.setRating("none");
+
+        CustomInfoWindowGoogleMap customInfoWindow = new CustomInfoWindowGoogleMap(this);
+        this.googleMap.setInfoWindowAdapter(customInfoWindow);
+
+        Marker m = this.googleMap.addMarker(markerOptions);
+        m.setTag(info);
+
         this.googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
-
-        //지도 보여주기
-        boxMap.setVisibility(View.VISIBLE);
     }
 
-    public void makeMaker(String latitude, String longitude){
-        LatLng posision = new LatLng(Double.valueOf(latitude ), Double.valueOf(longitude));
-        MarkerOptions makerOptions = new MarkerOptions();
-        makerOptions // LatLng에 대한 어레이를 만들어서 이용할 수도 있다.
-                .position(new LatLng(Double.valueOf(latitude), Double.valueOf(longitude)))
+    public void makeMaker(String latitude, String longitude, String address, String toilet_name, String open_time, String rating){
+        LatLng position = new LatLng(Double.valueOf(latitude ), Double.valueOf(longitude));
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(position)
                 .icon(getMarkerIcon("#ffe100"))
-                .title("마커"); // 타이틀.
-        this.googleMap.addMarker(makerOptions);
+                .title(toilet_name)
+                .snippet(address);
+
+        InfoWindowData info = new InfoWindowData();
+        info.setOpen_time("개방시간: "+open_time);
+        info.setRating("평점: "+rating);
+
+        CustomInfoWindowGoogleMap customInfoWindow = new CustomInfoWindowGoogleMap(this);
+        this.googleMap.setInfoWindowAdapter(customInfoWindow);
+
+        Marker m = this.googleMap.addMarker(markerOptions);
+        m.setTag(info);
     }
 
     public BitmapDescriptor getMarkerIcon(String color) {
         float[] hsv = new float[3];
         Color.colorToHSV(Color.parseColor(color), hsv);
         return BitmapDescriptorFactory.defaultMarker(hsv[0]);
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+
     }
 }
