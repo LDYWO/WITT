@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnInfoW
     private static final String TAG_LATITUDE = "latitude";
     private static final String TAG_LONGITUDE = "longitude";
 
+    public static String userEmail;
+
     JSONArray toilet_json_arr = null;
 
     ArrayList<HashMap<String,String>> toilet_info_list = new ArrayList<HashMap<String, String>>();
@@ -93,6 +95,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnInfoW
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        userEmail = getIntent().getStringExtra("userEmail");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

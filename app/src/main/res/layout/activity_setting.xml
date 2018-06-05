@@ -23,7 +23,7 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/log_out_button"
+            android:id="@+id/logoutBt"
             android:paddingLeft="18dip"
             android:drawableLeft="@drawable/ic_logout"
             android:scaleType="fitStart"
@@ -36,7 +36,7 @@
             android:text="로그아웃"
             android:background="@drawable/user_info_border"/>
         <Button
-            android:id="@+id/leave_button"
+            android:id="@+id/leaveBt"
             android:paddingLeft="18dip"
             android:drawableLeft="@drawable/ic_leave"
             android:drawablePadding="18dip"
