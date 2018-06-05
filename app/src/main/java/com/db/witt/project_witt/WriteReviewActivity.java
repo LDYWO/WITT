@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,6 +24,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +42,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -66,6 +69,8 @@ public class WriteReviewActivity extends AppCompatActivity {
     String bad_review;
     String rating;
 
+    String bitmapString;
+
     TextView name_tv;
     TextView toilet_address_tv;
     TextView open_time_tv;
@@ -82,8 +87,6 @@ public class WriteReviewActivity extends AppCompatActivity {
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
 
         //actionbar 객체 가져오기
         ActionBar actionBar = getSupportActionBar();
@@ -177,7 +180,7 @@ public class WriteReviewActivity extends AppCompatActivity {
                 bad_review = Bad_review_edittext.getText().toString().trim();
                 rating = String.valueOf(ratingBar.getRating());
 
-                WriteReviewRequest writeReviewRequest = new WriteReviewRequest(toilet_id, userEmail, rating, good_review, bad_review, write_date, responseListener);
+                WriteReviewRequest writeReviewRequest = new WriteReviewRequest(bitmapString,toilet_id, userEmail, rating, good_review, bad_review, write_date, responseListener);
                 RequestQueue queue = Volley.newRequestQueue(WriteReviewActivity.this);
                 queue.add(writeReviewRequest);
                 return true;
@@ -185,44 +188,6 @@ public class WriteReviewActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-
-    }
-
-    private void selectPhoto() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                File photoFile = null;
-                try {
-                    photoFile = createImageFile();
-                } catch (IOException ex) {
-
-                }
-                if (photoFile != null) {
-                    photoUri = FileProvider.getUriForFile(this, getPackageName(), photoFile);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                    startActivityForResult(intent, CAMERA_CODE);
-                }
-            }
-
-        }
-    }
-
-    private File createImageFile() throws IOException {
-        File dir = new File(Environment.getExternalStorageDirectory() + "/path/");
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        mImageCaptureName = timeStamp + ".png";
-
-        File storageDir = new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/path/"
-
-                + mImageCaptureName);
-        currentPhotoPath = storageDir.getAbsolutePath();
-
-        return storageDir;
 
     }
 
@@ -266,8 +231,20 @@ public class WriteReviewActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);//경로를 통해 비트맵으로 전환
-        ivImage.setImageBitmap(bitmap);//이미지 뷰에 비트맵 넣기
+        ///리사이징
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 4;
+        Bitmap bitmap = BitmapFactory.decodeFile(imagePath,options);//경로를 통해 비트맵으로 전환
+        int height = bitmap.getHeight();
+        int width = bitmap.getWidth();
+        Bitmap resized = Bitmap.createScaledBitmap( bitmap, width/8, height/8, true );
+        ////리사이징
+
+        //Bitmap bitmap = BitmapFactory.decodeFile(imagePath);//경로를 통해 비트맵으로 전환
+        ivImage.setImageBitmap(resized);//이미지 뷰에 비트맵 넣기
+
+        bitmapString = BitMapToString(resized);
 
     }
 
@@ -328,39 +305,7 @@ public class WriteReviewActivity extends AppCompatActivity {
 
     public void onClick(View v) {
         id_view = v.getId();
-        /*if(v.getId() == R.id.btn_signupfinish) {
-
-            //사진의 uri
-            Log.e("uri", mImageCaptureUri.toString());
-            //사진의 경로
-            Log.e("Path", absoultePath);
-
-            URLConnector urlConnector = new URLConnector();
-            JSONObject param = new JSONObject();
-            try {
-                param.put("mode", "profileChange");
-                param.put("path", absoultePath);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            urlConnector.test(true, absoultePath);
-
-            Toast.makeText(this, "사진 등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-
-            //DB로 사진 전송
-
-            //등록 하고 메인 화면으로 이동
-            SignUpPhotoActivity.this.finish();
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-
-        }else */if(v.getId() == R.id.btn_UploadPicture) {
-            DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    selectPhoto();
-                }
-            };
+        if(v.getId() == R.id.btn_UploadPicture) {
             DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -377,8 +322,7 @@ public class WriteReviewActivity extends AppCompatActivity {
 
             new AlertDialog.Builder(this)
                     .setTitle("업로드할 이미지 선택")
-                    .setPositiveButton("사진촬영", cameraListener)
-                    .setNegativeButton("앨범선택", albumListener)
+                    .setPositiveButton("앨범선택", albumListener)
                     .setNeutralButton("취소", cancelListener)
                     .show();
         }
@@ -405,8 +349,7 @@ public class WriteReviewActivity extends AppCompatActivity {
 
     }
 
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
 
         switch (requestCode) {
             case 1052: {
@@ -429,6 +372,14 @@ public class WriteReviewActivity extends AppCompatActivity {
             }
 
         }
+    }
+
+    public String BitMapToString(Bitmap bitmap){
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
     }
 }
 

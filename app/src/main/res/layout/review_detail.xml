@@ -205,7 +205,7 @@
                         android:textSize="8dp"/>
 
                     <ImageView
-                        android:id="@+id/imageView3"
+                        android:id="@+id/comment_img"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_marginTop="27dp"

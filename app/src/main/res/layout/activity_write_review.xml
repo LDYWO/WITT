@@ -17,7 +17,7 @@
             android:layout_weight="1"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/PopupOverlay"
-            app:title=" "/>
+            app:title="리뷰 작성"/>
 
             <ImageView
                 android:layout_width="130dp"

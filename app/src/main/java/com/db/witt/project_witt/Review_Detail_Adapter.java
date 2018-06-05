@@ -2,13 +2,18 @@ package com.db.witt.project_witt;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -37,6 +42,7 @@ public class Review_Detail_Adapter extends RecyclerView.Adapter<Review_Detail_Ad
     /** 정보 및 이벤트 처리는 이 메소드에서 구현 **/
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+
         final int pos = position;
         final HashMap<String,String> noticeItem = Review_List.get(position);
 
@@ -48,13 +54,22 @@ public class Review_Detail_Adapter extends RecyclerView.Adapter<Review_Detail_Ad
         holder.ratingbar.setRating(Float.valueOf(noticeItem.get("rating")));//평점
         holder.rating_num.setText(noticeItem.get("rating")); //평점
 
-        holder.comment_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CustomDialog dialog = new CustomDialog(context,noticeItem.get("current_userEmail"),noticeItem.get("toilet_id"),noticeItem.get("review_id"));
-                dialog.show();
-            }
-        });
+        Bitmap decodedBitmap = StringToBitMap(noticeItem.get("bitmap_string"));
+        holder.logo_image.setImageBitmap(decodedBitmap);
+
+        if(noticeItem.get("my_reviews")=="my_reviews"){
+            holder.comment_img.setVisibility(View.INVISIBLE);
+            holder.comment_button.setVisibility(View.INVISIBLE);
+        }
+        else{
+            holder.comment_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CustomDialog dialog = new CustomDialog(context,noticeItem.get("current_userEmail"),noticeItem.get("toilet_id"),noticeItem.get("review_id"));
+                    dialog.show();
+                }
+            });
+        }
     }
 
     @Override
@@ -70,6 +85,7 @@ public class Review_Detail_Adapter extends RecyclerView.Adapter<Review_Detail_Ad
         TextView tv_bad_content;
         RatingBar ratingbar;
         TextView rating_num;
+        ImageView logo_image,comment_img;
 
         Button comment_button;
 
@@ -86,10 +102,27 @@ public class Review_Detail_Adapter extends RecyclerView.Adapter<Review_Detail_Ad
             ratingbar = (RatingBar) v.findViewById(R.id.ratingbar);
             rating_num = (TextView) v.findViewById(R.id.rating_num);
 
+            logo_image=(ImageView)v.findViewById(R.id.logo_image);
+            comment_img = (ImageView)v.findViewById(R.id.comment_img);
+
             comment_button = (Button)v.findViewById(R.id.comment_button);
 
             cv = (CardView) v.findViewById(R.id.cv);
         }
 
     }
+
+    public Bitmap StringToBitMap(String encodedString){
+        try {
+            Log.e("encodedString::",encodedString);
+            byte [] encodeByte= Base64.decode(encodedString,Base64.DEFAULT);
+            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch(Exception e) {
+            Log.e("error::",e.getMessage());
+            e.getMessage();
+            return null;
+        }
+    }
+
 }

@@ -99,6 +99,7 @@ public class MyReviewActivity extends AppCompatActivity {
                     String bad_review = object.getString("bad_review");
                     String rating = object.getString("review_rating");
                     String review_id = object.getString("review_id");
+                    String bitmap_string = object.getString("bitmap_string");
 
                     HashMap<String, String> reviews = new HashMap<String, String>();
 
@@ -111,6 +112,8 @@ public class MyReviewActivity extends AppCompatActivity {
                     reviews.put("current_userEmail","bb");
                     reviews.put("toilet_id","aa");
                     reviews.put("review_id",review_id);
+                    reviews.put("bitmap_string",bitmap_string);
+                    reviews.put("my_reviews","my_reviews");
 
                     review_list.add(reviews);
 

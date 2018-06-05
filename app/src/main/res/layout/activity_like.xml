@@ -12,7 +12,21 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary" />
+        app:popupTheme="@style/PopupOverlay"
+        app:title=" ">
+        <ImageView
+            android:id="@+id/tv_header_img"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_favorite" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:text="좋아요"
+            android:textSize="8pt"
+            android:textColor="@color/BLACK"/>
+    </android.support.v7.widget.Toolbar>
 
     <LinearLayout
         android:orientation="vertical"

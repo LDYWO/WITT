@@ -77,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnInfoW
 
     JSONArray toilet_json_arr = null;
 
+    Intent user_intent;
+
     ArrayList<HashMap<String,String>> toilet_info_list = new ArrayList<HashMap<String, String>>();
 
     Toilet_info_Adapter toilet_info_adapter;
@@ -96,12 +98,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        userEmail = getIntent().getStringExtra("userEmail");
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        final Intent user_intent = getIntent();
+        user_intent = getIntent();
+        userEmail = getIntent().getStringExtra("userEmail");
 
         boxMap = (LinearLayout)findViewById(R.id.boxMap);
         //LocationManager
@@ -138,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
+        toilet_info_list.clear();
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -355,6 +358,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnInfoW
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-
     }
+
 }

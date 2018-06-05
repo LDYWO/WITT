@@ -13,7 +13,7 @@ public class WriteReviewRequest extends StringRequest {
     final static private String URL = "http://ec2-13-209-75-74.ap-northeast-2.compute.amazonaws.com/Review.php";
     private Map<String, String> parameters;
 
-    public WriteReviewRequest (String toilet_id, String userEmail,String rating,String good_review, String bad_review,String write_date, Response.Listener<String> listener){
+    public WriteReviewRequest (String bitmapString,String toilet_id, String userEmail,String rating,String good_review, String bad_review,String write_date, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
         parameters = new HashMap<>();
         parameters.put("toilet_id", toilet_id);
@@ -22,6 +22,8 @@ public class WriteReviewRequest extends StringRequest {
         parameters.put("good_review", good_review);
         parameters.put("bad_review", bad_review);
         parameters.put("write_date", write_date);
+        parameters.put("bitmap_string",bitmapString);
+        Log.e("bitmapString::",bitmapString);
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.db.witt.project_witt;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -53,8 +56,6 @@ public class DetailAndReviewActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
 
         final ToggleButton LikeBt = (ToggleButton)findViewById(R.id.LikeBt);
         LikeBt.setOnClickListener(new View.OnClickListener() {
@@ -162,6 +163,7 @@ public class DetailAndReviewActivity extends AppCompatActivity {
                             String bad_review = c.getString("bad_review");
                             String rating = c.getString("review_rating");
                             String review_id = c.getString("review_id");
+                            String bitmap_string = c.getString("bitmap_string");
 
                             HashMap<String, String> reviews = new HashMap<String, String>();
 
@@ -174,6 +176,7 @@ public class DetailAndReviewActivity extends AppCompatActivity {
                             reviews.put("current_userEmail",toilet_intent.getStringExtra("userEmail"));
                             reviews.put("toilet_id",toilet_intent.getStringExtra("toilet_id"));
                             reviews.put("review_id",review_id);
+                            reviews.put("bitmap_string",bitmap_string);
 
                             review_list.add(reviews);
                         }
@@ -262,7 +265,7 @@ public class DetailAndReviewActivity extends AppCompatActivity {
                 intent.putExtra("open_time", toilet_intent.getStringExtra("open_time"));
                 intent.putExtra("toilet_id",toilet_intent.getStringExtra("toilet_id"));
                 intent.putExtra("userEmail",toilet_intent.getStringExtra("userEmail"));
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
             }
         });
@@ -335,4 +338,5 @@ public class DetailAndReviewActivity extends AppCompatActivity {
             }
         }
     }
+
 }
