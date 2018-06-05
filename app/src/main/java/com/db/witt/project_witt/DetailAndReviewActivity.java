@@ -1,6 +1,7 @@
 package com.db.witt.project_witt;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -10,8 +11,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -20,8 +23,17 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static com.db.witt.project_witt.MainActivity.userEmail;
 
 public class DetailAndReviewActivity extends AppCompatActivity {
     JSONArray toilet_json_arr = null;
@@ -32,6 +44,8 @@ public class DetailAndReviewActivity extends AppCompatActivity {
 
     ArrayList<HashMap<String,String>> review_list = new ArrayList<HashMap<String, String>>();
 
+    private AlertDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +55,85 @@ public class DetailAndReviewActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
+
+        final ToggleButton LikeBt = (ToggleButton)findViewById(R.id.LikeBt);
+        LikeBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (LikeBt.isChecked()){
+                    LikeBt.setBackgroundDrawable(getResources().getDrawable(R.drawable.like)); // Toggle 버튼 좋아요 상태로 전환
+
+                    Intent toilet_intent = getIntent();
+                    String toilet_id = toilet_intent.getStringExtra("toilet_id");
+
+                    Response.Listener<String> responseListener = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try{
+                                JSONObject jsonResponse = new JSONObject(response);
+                                boolean success = jsonResponse.getBoolean("success");
+                                if (success){
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(DetailAndReviewActivity.this);
+                                    dialog = builder.setMessage("좋아요 리스트에 추가되었습니다.")
+                                            .setPositiveButton("확인", null)
+                                            .create();
+                                    dialog.show();
+                                }
+                                else{
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(DetailAndReviewActivity.this);
+                                    dialog = builder.setMessage("좋아요 리스트 등록에 실패했습니다.")
+                                            .setPositiveButton("확인", null)
+                                            .create();
+                                    dialog.show();
+                                }
+                            }
+                            catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    LikeRequest likeRequest = new LikeRequest(MainActivity.userEmail, toilet_id, responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(DetailAndReviewActivity.this);
+                    queue.add(likeRequest);
+                }else{
+                    LikeBt.setBackgroundDrawable(getResources().getDrawable(R.drawable.dislike));
+
+                    Intent toilet_intent = getIntent();
+                    String toilet_id = toilet_intent.getStringExtra("toilet_id");
+
+                    Response.Listener<String> responseListener = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try{
+                                JSONObject jsonResponse = new JSONObject(response);
+                                boolean success = jsonResponse.getBoolean("success");
+                                if (success){
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(DetailAndReviewActivity.this);
+                                    dialog = builder.setMessage("좋아요 리스트에서 제거되었습니다.")
+                                            .setPositiveButton("확인", null)
+                                            .create();
+                                    dialog.show();
+                                }
+                                else{
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(DetailAndReviewActivity.this);
+                                    dialog = builder.setMessage("좋아요 리스트로부터 제거에 실패했습니다.")
+                                            .setPositiveButton("확인", null)
+                                            .create();
+                                    dialog.show();
+                                }
+                            }
+                            catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    DislikeRequest dislikeRequest = new DislikeRequest(MainActivity.userEmail, toilet_id, responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(DetailAndReviewActivity.this);
+                    queue.add(dislikeRequest);
+
+                }
+            }
+        });
 
         final Intent toilet_intent = getIntent();
 
@@ -173,5 +266,73 @@ public class DetailAndReviewActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        new BackgroundTask().execute();
+    }
+
+    class BackgroundTask extends AsyncTask<Void, Void, String> {
+
+        Intent toiletIntent = getIntent();
+        String target;
+        String toilet_id = toiletIntent.getStringExtra("toilet_id");
+
+        @Override
+        protected void onPreExecute(){
+            try {
+                target = "http://ec2-13-209-75-74.ap-northeast-2.compute.amazonaws.com/LikeValidate.php?userEmail=" + URLEncoder.encode(MainActivity.userEmail,"UTF-8") + "&toilet_id=" + URLEncoder.encode(toilet_id,"UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            try {
+                URL url = new URL(target);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+                StringBuilder stringBuilder = new StringBuilder();
+                while ((temp = bufferedReader.readLine()) != null){
+                    stringBuilder.append(temp + "\n");
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return stringBuilder.toString().trim();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        public void onProgressUpdate(Void... values){
+            super.onProgressUpdate();
+        }
+
+        @Override
+        public void onPostExecute(String result){
+            try{
+                JSONObject jsonResponse = new JSONObject(result);
+                boolean success = jsonResponse.getBoolean("success");
+
+                if(success){
+                    ToggleButton LikeBt = (ToggleButton)findViewById(R.id.LikeBt);
+                    LikeBt.setChecked(true);
+                    LikeBt.setBackgroundDrawable(getResources().getDrawable(R.drawable.like));
+                }
+                else{
+                    ToggleButton LikeBt = (ToggleButton)findViewById(R.id.LikeBt);
+                    LikeBt.setChecked(false);
+                    LikeBt.setBackgroundDrawable(getResources().getDrawable(R.drawable.dislike));
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                Log.e("실패","설마...");
+            }
+        }
     }
 }
