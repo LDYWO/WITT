@@ -25,7 +25,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ArrayAdapter adapter;
     private Spinner spinner;
 
-    private String userEmail, userPassword, userGender, userNickname, userAge;
+    private String userGender;
 
     private AlertDialog dialog;
     private boolean validate = false;

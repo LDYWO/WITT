@@ -61,7 +61,7 @@
             android:textSize="15dp"/>
 
         <TextView
-            android:id="@+id/user_email_text"
+            android:id="@+id/userEmailText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -95,7 +95,7 @@
             android:textSize="15dp"/>
 
         <EditText
-            android:id="@+id/user_nickname_text"
+            android:id="@+id/userNicknameText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -190,7 +190,7 @@
             android:layout_marginLeft="45dp"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:id="@+id/gender_radio_group"
+            android:id="@+id/GenderRadioGroup"
             android:layout_gravity="center"
             android:orientation="horizontal">
 
