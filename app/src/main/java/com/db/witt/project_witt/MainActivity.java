@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnInfoW
                         String latitude = c.getString(TAG_LATITUDE);
                         String longitude = c.getString(TAG_LONGITUDE);
                         String toilet_id = c.getString("toilet_id");
+                        String rating_avg = c.getString("rating_avg");
 
                         if(getDistance(mLatitude,mLongitude,Double.valueOf(latitude),Double.valueOf(longitude))<1000){
 
@@ -158,13 +159,18 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnInfoW
                             toilets.put(TAG_TOILET_ADD, address);
                             toilets.put(TAG_TOILET_NAME, toilet_name);
                             toilets.put(TAG_OPEN_TIME, open_time);
-                            toilets.put(TAG_RATING, rating);
+                            if(rating_avg!="null"){
+                                toilets.put(TAG_RATING,rating_avg);
+                            }
+                            else {
+                                toilets.put(TAG_RATING, "0");
+                            }
                             toilets.put("toilet_id",toilet_id);
                             toilets.put("userEmail",user_intent.getStringExtra("userEmail"));
 
                             toilet_info_list.add(toilets);
                         }
-                        makeMaker(latitude,longitude, address, toilet_name, open_time, rating);
+                        makeMaker(latitude,longitude, address, toilet_name, open_time, rating_avg);
                     }
 
                     toilet_info_adapter = new Toilet_info_Adapter(getApplicationContext(),toilet_info_list);
@@ -324,7 +330,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnInfoW
 
         InfoWindowData info = new InfoWindowData();
         info.setOpen_time("개방시간: "+open_time);
-        info.setRating("평점: "+rating);
+        if(rating!="null")
+            info.setRating("평점: "+rating);
+        else
+            info.setRating("평점: 0");
 
         CustomInfoWindowGoogleMap customInfoWindow = new CustomInfoWindowGoogleMap(this);
         this.googleMap.setInfoWindowAdapter(customInfoWindow);

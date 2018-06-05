@@ -59,29 +59,35 @@ public class DetailAndReviewActivity extends AppCompatActivity {
                     ratingAvg_json_arr = jsonObject.getJSONArray("result3");
                     JSONObject ratingavg_obj = ratingAvg_json_arr.getJSONObject(0);
 
-                    for (int i = 0; i < review_json_arr.length(); i++) {
-                        JSONObject c = review_json_arr.getJSONObject(i);
-                        String user_email = c.getString("review_userEmail");
-                        String toilet_name = c.getString("toilet_name");
-                        String write_date = c.getString("write_date");
-                        String good_review = c.getString("good_review");
-                        String bad_review = c.getString("bad_review");
-                        String rating = c.getString("review_rating");
+                    if(review_json_arr.length()!=0){
+                        for (int i = 0; i < review_json_arr.length(); i++) {
+                            JSONObject c = review_json_arr.getJSONObject(i);
+                            String user_email = c.getString("review_userEmail");
+                            String toilet_name = c.getString("toilet_name");
+                            String write_date = c.getString("write_date");
+                            String good_review = c.getString("good_review");
+                            String bad_review = c.getString("bad_review");
+                            String rating = c.getString("review_rating");
+                            String review_id = c.getString("review_id");
 
-                        HashMap<String, String> reviews = new HashMap<String, String>();
+                            HashMap<String, String> reviews = new HashMap<String, String>();
 
-                        reviews.put("user_email", user_email);
-                        reviews.put("toilet_name", toilet_name);
-                        reviews.put("write_date", write_date);
-                        reviews.put("good_content", good_review);
-                        reviews.put("bad_content", bad_review);
-                        reviews.put("rating", rating);
+                            reviews.put("user_email", user_email);
+                            reviews.put("toilet_name", toilet_name);
+                            reviews.put("write_date", write_date);
+                            reviews.put("good_content", good_review);
+                            reviews.put("bad_content", bad_review);
+                            reviews.put("rating", rating);
+                            reviews.put("current_userEmail",toilet_intent.getStringExtra("userEmail"));
+                            reviews.put("toilet_id",toilet_intent.getStringExtra("toilet_id"));
+                            reviews.put("review_id",review_id);
 
-                        review_list.add(reviews);
+                            review_list.add(reviews);
+                        }
+                        review_detail_adapter = new Review_Detail_Adapter(DetailAndReviewActivity.this,review_list);
+                        recyclerView.setAdapter(review_detail_adapter);
+                        review_detail_adapter.notifyDataSetChanged();
                     }
-                    review_detail_adapter = new Review_Detail_Adapter(getApplicationContext(),review_list);
-                    recyclerView.setAdapter(review_detail_adapter);
-                    review_detail_adapter.notifyDataSetChanged();
 
                     for (int i = 0; i < toilet_json_arr.length(); i++) {
                         JSONObject c = toilet_json_arr.getJSONObject(i);
@@ -101,7 +107,13 @@ public class DetailAndReviewActivity extends AppCompatActivity {
                         String management_name = c.getString("management_name");
                         String phone_number = c.getString("phone_number");
                         String open_time = c.getString("open_time");
-                        String rating = ratingavg_obj.getString("review_rating");
+                        String rating;
+                        if(ratingavg_obj.getString("review_rating")!="null"){
+                            rating = ratingavg_obj.getString("review_rating");
+                        }
+                        else {
+                            rating = "0";
+                        }
 
                         TextView name_tv = findViewById(R.id.toilet_name);
                         TextView toilet_address_tv = findViewById(R.id.toilet_address);

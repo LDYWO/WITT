@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -47,9 +48,11 @@ public class Review_Detail_Adapter extends RecyclerView.Adapter<Review_Detail_Ad
         holder.ratingbar.setRating(Float.valueOf(noticeItem.get("rating")));//평점
         holder.rating_num.setText(noticeItem.get("rating")); //평점
 
-        holder.cv.setOnClickListener(new View.OnClickListener() {
+        holder.comment_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CustomDialog dialog = new CustomDialog(context,noticeItem.get("current_userEmail"),noticeItem.get("toilet_id"),noticeItem.get("review_id"));
+                dialog.show();
             }
         });
     }
@@ -68,6 +71,8 @@ public class Review_Detail_Adapter extends RecyclerView.Adapter<Review_Detail_Ad
         RatingBar ratingbar;
         TextView rating_num;
 
+        Button comment_button;
+
         CardView cv;
 
         public ViewHolder(View v) {
@@ -80,6 +85,8 @@ public class Review_Detail_Adapter extends RecyclerView.Adapter<Review_Detail_Ad
 
             ratingbar = (RatingBar) v.findViewById(R.id.ratingbar);
             rating_num = (TextView) v.findViewById(R.id.rating_num);
+
+            comment_button = (Button)v.findViewById(R.id.comment_button);
 
             cv = (CardView) v.findViewById(R.id.cv);
         }

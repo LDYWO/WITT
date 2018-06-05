@@ -13,67 +13,41 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CustomDialog extends Dialog implements View.OnClickListener{
 
-    public CustomDialog(@NonNull Context context) {
-        super(context);
-    }
-
-    @Override
-    public void onClick(View view) {
-
-    }
-
-   /* FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String userID,userNickname,comment,comment_date,drug_index;
-    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("community");
-
-    CommentAdapter adapter = new CommentAdapter();
-    CommentAdapter adapter2 = new CommentAdapter();
-
-    private void createComment(String userID, String userNickname, String content, String comment_date){
-        Comment comment_content = new Comment(userID,userNickname, content, comment_date);
-        DatabaseManager.databaseReference.child("community").child(postID).child("comment").push().setValue(comment_content);
-    }
-
-    private void createReviewComment(String userID, String userNickname, String content, String comment_date){
-        Comment comment_content = new Comment(userID,userNickname, content, comment_date);
-        DatabaseManager.databaseReference.child("reviews").child(index).child(postID).child("comment").push().setValue(comment_content);
-    }
-
     private static final int LAYOUT = R.layout.dialog_custom;
+
+    JSONArray comment_json_arr = null;
+
+    String userID,userNickname,comment,comment_date;
+    CommentAdapter adapter = new CommentAdapter();
 
     private Context context;
     private EditText comment_textinput;
     private Button comment_send_button;
     private ListView comment_listview;
-    String postID,community_review,index;
+    String postID,toilet_id,review_id;
 
     public CustomDialog(@NonNull Context context) {
         super(context);
         this.context = context;
     }
-    public CustomDialog(@NonNull Context context, String postID) {
+    public CustomDialog(@NonNull Context context,String postID,String toilet_id,String review_id) {
         super(context);
         this.context = context;
         this.postID = postID;
-    }
-    public CustomDialog(@NonNull Context context, String postID, String community_review) {
-        super(context);
-        this.context = context;
-        this.postID = postID;
-        this.community_review = community_review;
-    }
-
-    public CustomDialog(@NonNull Context context, String postID, String drug_index, String community_review) {
-        super(context);
-        this.context = context;
-        this.postID = postID;
-        this.index = drug_index;
-        this.community_review = community_review;
+        this.toilet_id = toilet_id;
+        this.review_id = review_id;
     }
 
     @Override
@@ -89,114 +63,101 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
         comment_textinput.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_IN);
         comment_send_button.setOnClickListener(this);
 
-        if(this.community_review.trim()=="community"){
-        FirebaseDatabase.getInstance().getReference("community").child(this.postID).child("comment").addValueEventListener(new ValueEventListener() {
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                adapter.removeItem();
-
-                //Log.e("Dialog dataSnapshot::",dataSnapshot.getKey().toString());
-
-                Iterable<DataSnapshot> childcontact = dataSnapshot.getChildren();
-                for (DataSnapshot contact:childcontact){
-                    Log.e("Dialog contact::",contact.getKey().toString());
-                    String writer = contact.child("userNickname").getValue().toString();
-                    String content = contact.child("content").getValue().toString();
-                    String date = contact.child("comment_date").getValue().toString();
-                    adapter.addItem(writer, content, date);
-                    comment_listview.setAdapter(adapter);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        }
-        else if(this.community_review.trim()=="review"){
-            Log.e("review::",community_review);
-            FirebaseDatabase.getInstance().getReference("reviews").child(this.index).child(this.postID).child("comment").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    adapter2.removeItem();
-                    Iterable<DataSnapshot> childcontact = dataSnapshot.getChildren();
-                    for (DataSnapshot contact:childcontact){
-                        Log.e("Dialog contact::",contact.getKey().toString());
-                        String writer = contact.child("userNickname").getValue().toString();
-                        String content = contact.child("content").getValue().toString();
-                        String date = contact.child("comment_date").getValue().toString();
-                        adapter2.addItem(writer, content, date);
-                        comment_listview.setAdapter(adapter2);
+            public void onResponse(String response) {
+                try{
+                    adapter.removeItem();
+                    JSONObject jsonObject = new JSONObject(response);
+                    comment_json_arr = jsonObject.getJSONArray("result");
+                    if(comment_json_arr.length()!=0){
+                        for (int i = 0; i < comment_json_arr.length(); i++) {
+                            JSONObject c = comment_json_arr.getJSONObject(i);
+                            String writer = c.getString("comment_userEmail");
+                            String content = c.getString("comment_content");
+                            String date = c.getString("comment_write_date");
+                            adapter.addItem(writer, content, date);
+                            comment_listview.setAdapter(adapter);
+                        }
                     }
                 }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
+                catch (Exception e) {
+                    e.printStackTrace();
                 }
-            });
-        }
+            }
+        };
+        CommentLoadRequest commentLoadRequest = new CommentLoadRequest(review_id, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(commentLoadRequest);
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.comment_send_button:{
-                userID = user.getUid();
+                long now = System.currentTimeMillis();
+                Date date = new Date(now);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd aa hh:mm:ss");
+                comment_date = sdf.format(date);
 
-                if(community_review.trim()=="community"){
-                mDatabase = FirebaseDatabase.getInstance().getReference("users").child(userID);
-
-                mDatabase.addValueEventListener(new ValueEventListener() {
+                Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        userNickname = dataSnapshot.child("nickname").getValue().toString();
-                        comment = comment_textinput.getText().toString().trim();
+                    public void onResponse(String response) {
+                        try{
+                            JSONObject jsonObject = new JSONObject(response);
+                            boolean success = jsonObject.getBoolean("success");
+                            if(success){
+                                Toast.makeText(context, "댓글이 등록 되었습니다.", Toast.LENGTH_SHORT).show();
+                                adapter.removeItem();
+                                makeComment();
+                            }
+                            else{
+                                Toast.makeText(context, "등록 실패", Toast.LENGTH_SHORT).show();
 
-                        long now = System.currentTimeMillis();
-                        Date date = new Date(now);
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd   aa hh:mm:ss");
-                        comment_date = sdf.format(date);
-                        Toast.makeText(context, "댓글이 등록 되었습니다.", Toast.LENGTH_SHORT).show();
-                        createComment(userID,userNickname,comment,comment_date);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-                adapter.removeItem();
-              }
-              else if(community_review.trim()=="review"){
-                    mDatabase = FirebaseDatabase.getInstance().getReference("users").child(userID);
-
-                    mDatabase.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            userNickname = dataSnapshot.child("nickname").getValue().toString();
-                            comment = comment_textinput.getText().toString().trim();
-
-                            long now = System.currentTimeMillis();
-                            Date date = new Date(now);
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd   aa hh:mm:ss");
-                            comment_date = sdf.format(date);
-                            Toast.makeText(context, "댓글이 등록 되었습니다.", Toast.LENGTH_SHORT).show();
-                            createReviewComment(userID,userNickname,comment,comment_date);
+                            }
                         }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
+                        catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    });
-                    adapter2.removeItem();
-              }
-
+                    }
+                };
+                comment = comment_textinput.getText().toString().trim();
+                CommentRequest commentRequest = new CommentRequest(review_id,postID,toilet_id,comment,comment_date, responseListener);
+                RequestQueue queue = Volley.newRequestQueue(context);
+                queue.add(commentRequest);
             }
-                break;
+            break;
         }
-    }*/
+    }
+
+    public void makeComment(){
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    adapter.removeItem();
+                    JSONObject jsonObject = new JSONObject(response);
+                    comment_json_arr = jsonObject.getJSONArray("result");
+                    if(comment_json_arr.length()!=0){
+                        for (int i = 0; i < comment_json_arr.length(); i++) {
+                            JSONObject c = comment_json_arr.getJSONObject(i);
+                            String writer = c.getString("comment_userEmail");
+                            String content = c.getString("comment_content");
+                            String date = c.getString("comment_write_date");
+                            adapter.addItem(writer, content, date);
+                            comment_listview.setAdapter(adapter);
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        CommentLoadRequest commentLoadRequest = new CommentLoadRequest(review_id, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(commentLoadRequest);
+    }
 }
 
