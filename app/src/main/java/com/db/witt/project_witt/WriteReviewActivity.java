@@ -1,8 +1,24 @@
 package com.db.witt.project_witt;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +28,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,11 +40,21 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
 public class WriteReviewActivity extends AppCompatActivity {
+
+    private final int CAMERA_CODE = 1111;
+    private final int GALLERY_CODE = 1112;
+
+    private int id_view;
+    private Uri photoUri;
+    private String currentPhotoPath;//실제 사진 파일 경로
+    String mImageCaptureName;//이미지 이름
 
     String name;
     String address;
@@ -44,6 +72,8 @@ public class WriteReviewActivity extends AppCompatActivity {
     RatingBar ratingBar;
     EditText Good_review_edittext;
     EditText Bad_review_edittext;
+
+    ImageView ivImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,13 +99,14 @@ public class WriteReviewActivity extends AppCompatActivity {
         name_tv = findViewById(R.id.toilet_name);
         toilet_address_tv = findViewById(R.id.toilet_address);
         open_time_tv = findViewById(R.id.toilet_open_time);
-        ratingBar = (RatingBar)findViewById(R.id.ratingbar);
-        Good_review_edittext = (EditText)findViewById(R.id.good_review_edittext);
-        Bad_review_edittext = (EditText)findViewById(R.id.bad_review_edittext);
+        ratingBar = (RatingBar) findViewById(R.id.ratingbar);
+        Good_review_edittext = (EditText) findViewById(R.id.good_review_edittext);
+        Bad_review_edittext = (EditText) findViewById(R.id.bad_review_edittext);
+        ivImage = (ImageView)findViewById(R.id.logo_image);
 
         name_tv.setText(name);
         toilet_address_tv.setText(address);
-        open_time_tv.setText("개방 시간: "+open_time);
+        open_time_tv.setText("개방 시간: " + open_time);
 
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
@@ -98,6 +129,10 @@ public class WriteReviewActivity extends AppCompatActivity {
             }
         });
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkPermissions();
+        }
+
     }
 
     @Override
@@ -108,29 +143,27 @@ public class WriteReviewActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
-            case android.R.id.home:{
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
                 onBackPressed();
                 return true;
             }
-            case R.id.newPost:{
+            case R.id.newPost: {
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try{
+                        try {
                             JSONObject jsonObject = new JSONObject(response);
                             boolean success = jsonObject.getBoolean("success");
-                            if(success){
+                            if (success) {
                                 Toast.makeText(WriteReviewActivity.this, "리뷰가 등록 되었습니다.", Toast.LENGTH_SHORT).show();
                                 onBackPressed();
-                            }
-                            else{
+                            } else {
                                 Toast.makeText(WriteReviewActivity.this, "등록 실패", Toast.LENGTH_SHORT).show();
                                 onBackPressed();
                             }
-                        }
-                        catch (Exception e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -144,7 +177,7 @@ public class WriteReviewActivity extends AppCompatActivity {
                 bad_review = Bad_review_edittext.getText().toString().trim();
                 rating = String.valueOf(ratingBar.getRating());
 
-                WriteReviewRequest writeReviewRequest = new WriteReviewRequest(toilet_id,userEmail,rating,good_review,bad_review,write_date, responseListener);
+                WriteReviewRequest writeReviewRequest = new WriteReviewRequest(toilet_id, userEmail, rating, good_review, bad_review, write_date, responseListener);
                 RequestQueue queue = Volley.newRequestQueue(WriteReviewActivity.this);
                 queue.add(writeReviewRequest);
                 return true;
@@ -155,4 +188,247 @@ public class WriteReviewActivity extends AppCompatActivity {
 
     }
 
+    private void selectPhoto() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+
+                }
+                if (photoFile != null) {
+                    photoUri = FileProvider.getUriForFile(this, getPackageName(), photoFile);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                    startActivityForResult(intent, CAMERA_CODE);
+                }
+            }
+
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        File dir = new File(Environment.getExternalStorageDirectory() + "/path/");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        mImageCaptureName = timeStamp + ".png";
+
+        File storageDir = new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/path/"
+
+                + mImageCaptureName);
+        currentPhotoPath = storageDir.getAbsolutePath();
+
+        return storageDir;
+
+    }
+
+    private void getPictureForPhoto() {
+        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(currentPhotoPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int exifOrientation;
+        int exifDegree;
+
+        if (exif != null) {
+            exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            exifDegree = exifOrientationToDegrees(exifOrientation);
+        } else {
+            exifDegree = 0;
+        }
+        ivImage.setImageBitmap(rotate(bitmap, exifDegree));//이미지 뷰에 비트맵 넣기
+    }
+
+    private void selectGallery() {
+
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(intent, GALLERY_CODE);
+    }
+
+    private void sendPicture(Uri imgUri) {
+
+        String imagePath = getRealPathFromURI(imgUri); // path 경로
+        Log.e("path::",imagePath);
+
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(imagePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);//경로를 통해 비트맵으로 전환
+        ivImage.setImageBitmap(bitmap);//이미지 뷰에 비트맵 넣기
+
+    }
+
+    private int exifOrientationToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+            return 90;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+            return 180;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+            return 270;
+        }
+        return 0;
+    }
+
+    private Bitmap rotate(Bitmap src, float degree) {
+
+        // Matrix 객체 생성
+        Matrix matrix = new Matrix();
+        // 회전 각도 셋팅
+        matrix.postRotate(degree);
+        // 이미지와 Matrix 를 셋팅해서 Bitmap 객체 생성
+        return Bitmap.createBitmap(src, 0, 0, src.getWidth(),
+                src.getHeight(), matrix, true);
+    }
+
+    private String getRealPathFromURI(Uri contentUri) {
+        int column_index=0;
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        if(cursor.moveToFirst()){
+            column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        }
+
+        return cursor.getString(column_index);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+
+            switch (requestCode) {
+
+                case GALLERY_CODE:
+                    sendPicture(data.getData()); //갤러리에서 가져오기
+                    break;
+                case CAMERA_CODE:
+                    getPictureForPhoto(); //카메라에서 가져오기
+                    break;
+
+                default:
+                    break;
+            }
+
+        }
+    }
+
+    public void onClick(View v) {
+        id_view = v.getId();
+        /*if(v.getId() == R.id.btn_signupfinish) {
+
+            //사진의 uri
+            Log.e("uri", mImageCaptureUri.toString());
+            //사진의 경로
+            Log.e("Path", absoultePath);
+
+            URLConnector urlConnector = new URLConnector();
+            JSONObject param = new JSONObject();
+            try {
+                param.put("mode", "profileChange");
+                param.put("path", absoultePath);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            urlConnector.test(true, absoultePath);
+
+            Toast.makeText(this, "사진 등록이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+
+            //DB로 사진 전송
+
+            //등록 하고 메인 화면으로 이동
+            SignUpPhotoActivity.this.finish();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+
+        }else */if(v.getId() == R.id.btn_UploadPicture) {
+            DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    selectPhoto();
+                }
+            };
+            DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    selectGallery();
+                }
+            };
+
+            DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            };
+
+            new AlertDialog.Builder(this)
+                    .setTitle("업로드할 이미지 선택")
+                    .setPositiveButton("사진촬영", cameraListener)
+                    .setNegativeButton("앨범선택", albumListener)
+                    .setNeutralButton("취소", cancelListener)
+                    .show();
+        }
+
+    }
+
+    private void checkPermissions(){
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED||
+                ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    },
+                    1052);
+
+        }
+
+    }
+
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+        switch (requestCode) {
+            case 1052: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted.
+
+                }
+                else {
+
+
+                    // Permission denied - Show a message to inform the user that this app only works
+                    // with these permissions granted
+
+                }
+                return;
+            }
+
+        }
+    }
 }
+
