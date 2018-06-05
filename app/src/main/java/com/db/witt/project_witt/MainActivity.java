@@ -171,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnInfoW
                             }
                             toilets.put("toilet_id",toilet_id);
                             toilets.put("userEmail",user_intent.getStringExtra("userEmail"));
+                            toilets.put("likes","no");
 
                             toilet_info_list.add(toilets);
                         }

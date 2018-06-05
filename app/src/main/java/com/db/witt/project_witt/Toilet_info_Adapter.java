@@ -45,20 +45,22 @@ public class Toilet_info_Adapter extends RecyclerView.Adapter<Toilet_info_Adapte
         holder.ratingbar.setRating(Float.valueOf(noticeItem.get("rating")));//평점
         holder.rating_num.setText(noticeItem.get("rating")); //평점
 
-        holder.cv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(context, DetailAndReviewActivity.class);
-                intent.putExtra("toilet_address2", toilet_info_List.get(pos).get("toilet_address2"));
-                intent.putExtra("toilet_name", toilet_info_List.get(pos).get("toilet_name"));
-                intent.putExtra("open_time", toilet_info_List.get(pos).get("open_time"));
-                intent.putExtra("rating", toilet_info_List.get(pos).get("rating"));
-                intent.putExtra("toilet_id",toilet_info_List.get(pos).get("toilet_id"));
-                intent.putExtra("userEmail",toilet_info_List.get(pos).get("userEmail"));
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            }
-        });
+        if(noticeItem.get("likes")!="likes"){
+            holder.cv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(context, DetailAndReviewActivity.class);
+                    intent.putExtra("toilet_address2", toilet_info_List.get(pos).get("toilet_address2"));
+                    intent.putExtra("toilet_name", toilet_info_List.get(pos).get("toilet_name"));
+                    intent.putExtra("open_time", toilet_info_List.get(pos).get("open_time"));
+                    intent.putExtra("rating", toilet_info_List.get(pos).get("rating"));
+                    intent.putExtra("toilet_id",toilet_info_List.get(pos).get("toilet_id"));
+                    intent.putExtra("userEmail",toilet_info_List.get(pos).get("userEmail"));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+            });
+        }
     }
 
     @Override

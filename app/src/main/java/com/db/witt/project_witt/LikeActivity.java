@@ -25,11 +25,19 @@ import java.util.HashMap;
 public class LikeActivity extends AppCompatActivity {
 
     private AlertDialog dialog;
+    RecyclerView recyclerView;
+
+    ArrayList<HashMap<String,String>> like_list = new ArrayList<HashMap<String, String>>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_like);
+
+        recyclerView = (RecyclerView) findViewById(R.id.rv);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(layoutManager);
 
         new BackgroundTask().execute();
     }
@@ -41,7 +49,7 @@ public class LikeActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute(){
             try {
-                target = "http://ec2-13-209-75-74.ap-northeast-2.compute.amazonaws.com/UserReviewList.php?userEmail=" + URLEncoder.encode(MainActivity.userEmail,"UTF-8");
+                target = "http://ec2-13-209-75-74.ap-northeast-2.compute.amazonaws.com/UserLikeList.php?userEmail=" + URLEncoder.encode(MainActivity.userEmail,"UTF-8");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -78,46 +86,36 @@ public class LikeActivity extends AppCompatActivity {
         @Override
         public void onPostExecute(String result){
             try{
-
-                RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(layoutManager);
-
-                ArrayList<HashMap<String,String>> review_list = new ArrayList<HashMap<String, String>>();
-
                 JSONObject jsonObject = new JSONObject(result);
-                JSONArray jsonArray = jsonObject.getJSONArray("result");
+                JSONArray jsonArray = jsonObject.getJSONArray("response");
 
                 int count = 0;
                 while(count<jsonArray.length()){
                     JSONObject object = jsonArray.getJSONObject(count);
-                    String user_email = object.getString("review_userEmail");
+                    String user_email = object.getString("userEmail");
                     String toilet_name = object.getString("toilet_name");
-                    String write_date = object.getString("write_date");
-                    String good_review = object.getString("good_review");
-                    String bad_review = object.getString("bad_review");
-                    String rating = object.getString("review_rating");
-                    String review_id = object.getString("review_id");
+                    String toilet_address2 = object.getString("toilet_address2");
+                    String open_time = object.getString("open_time");
+                    String rating = object.getString("rating_avg");
 
-                    HashMap<String, String> reviews = new HashMap<String, String>();
+                    if(rating=="null")
+                        rating="0";
 
-                    reviews.put("user_email", user_email);
-                    reviews.put("toilet_name", toilet_name);
-                    reviews.put("write_date", write_date);
-                    reviews.put("good_content", good_review);
-                    reviews.put("bad_content", bad_review);
-                    reviews.put("rating", rating);
-                    reviews.put("current_userEmail","bb");
-                    reviews.put("toilet_id","aa");
-                    reviews.put("review_id",review_id);
+                    HashMap<String, String> likes = new HashMap<String, String>();
 
-                    review_list.add(reviews);
+                    likes.put("user_email", user_email);
+                    likes.put("toilet_name", toilet_name);
+                    likes.put("toilet_address2", toilet_address2);
+                    likes.put("open_time", open_time);
+                    likes.put("rating", rating);
+                    likes.put("likes","likes");
+
+                    like_list.add(likes);
 
                     count++;
                 }
 
-                if (review_list.isEmpty()){
+                if (like_list.isEmpty()){
                     AlertDialog.Builder builder = new AlertDialog.Builder(LikeActivity.this);
                     dialog = builder.setMessage("작성한 리뷰가 없습니다.\n리뷰를 작성해주세요.")
                             .setPositiveButton("확인", null)
@@ -125,9 +123,9 @@ public class LikeActivity extends AppCompatActivity {
                     dialog.show();
                 }
 
-                Review_Detail_Adapter review_detail_adapter = new Review_Detail_Adapter(LikeActivity.this,review_list);
-                recyclerView.setAdapter(review_detail_adapter);
-                review_detail_adapter.notifyDataSetChanged();
+                Toilet_info_Adapter toilet_info_adapter = new Toilet_info_Adapter(LikeActivity.this,like_list);
+                recyclerView.setAdapter(toilet_info_adapter);
+                toilet_info_adapter.notifyDataSetChanged();
 
             }catch (Exception e){
                 e.printStackTrace();
