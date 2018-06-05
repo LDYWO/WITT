@@ -14,9 +14,10 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />v
+            android:layout_weight="1"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/PopupOverlay"
+            app:title=" "/>
 
         <ImageView
             android:layout_width="130dp"
@@ -28,32 +29,52 @@
             android:layout_marginTop="22dp"
             android:layout_below="@+id/toolbar"
             android:src="@drawable/logo"
-            android:id="@+id/medicine_image"
+            android:id="@+id/logo_image"
             tools:ignore="NotSibling" />
 
-        <TextView
-            android:id="@+id/company_name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginBottom="5dp"
-            android:layout_above="@+id/medicine_name"
-            android:layout_toEndOf="@+id/medicine_image"
-            android:layout_toRightOf="@+id/medicine_image"
-            android:text="화장실 위치" />
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="113dp"
+            android:layout_toEndOf="@+id/logo_image"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/medicine_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/medicine_image"
-            android:layout_toRightOf="@+id/medicine_image"
-            android:layout_alignBottom="@+id/medicine_image"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginBottom="30dp"
-            android:text="화장실 이름"
-            android:textSize="20dp" />
+            <TextView
+                android:id="@+id/toilet_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/toilet_name"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="25dp"
+                android:layout_toEndOf="@+id/logo_image"
+                android:layout_toRightOf="@+id/logo_image"
+                android:textSize="12dp"
+                android:text="화장실 위치" />
+
+            <TextView
+                android:id="@+id/toilet_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/logo_image"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="5dp"
+                android:layout_toEndOf="@+id/logo_image"
+                android:layout_toRightOf="@+id/logo_image"
+                android:text="화장실 이름"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/toilet_open_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/toilet_address"
+                android:layout_below="@+id/toilet_name"
+                android:layout_marginLeft="25dp"
+                android:text="개방시간"
+                android:textSize="10dp" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/rataing_title"
@@ -74,7 +95,7 @@
             android:theme="@style/RatingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/medicine_image"
+            android:layout_below="@+id/logo_image"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
             android:stepSize="0.5"
@@ -95,9 +116,11 @@
             android:id="@+id/good_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/thumb_up_image"
-            android:layout_alignEnd="@+id/medicine_image"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:layout_below="@+id/ratingbar"
+            android:layout_toEndOf="@+id/thumb_up_image"
             android:text="좋았던 점"
             android:textSize="20dp" />
 
@@ -105,11 +128,12 @@
             android:id="@+id/good_review_edittext"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:padding="10dp"
             android:background="@drawable/edit_text_box"
             android:layout_below="@id/good_title"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:inputType="text"
             android:imeOptions="actionDone"
             android:hint="*이용한 화장실의 자세한 리뷰를 남겨주세요.\n\n청결도 및 냄새, 편의성 등\n\n\n"
@@ -141,11 +165,12 @@
             android:id="@+id/bad_review_edittext"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:padding="10dp"
             android:background="@drawable/edit_text_box"
             android:layout_below="@id/bad_title"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:layout_marginBottom="20dp"
             android:hint="*이용한 화장실의 자세한 리뷰를 남겨주세요.\n\n악취, 안전성 문제 등\n\n\n"
             android:inputType="text"

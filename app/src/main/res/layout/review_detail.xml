@@ -38,7 +38,7 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:id="@+id/drug_image"
+                        android:id="@+id/logo_image"
                         android:layout_centerVertical="true"
                         android:src="@drawable/logo" />
 
@@ -47,7 +47,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/drug_image"
+                        android:layout_toRightOf="@+id/logo_image"
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="10dp"
@@ -58,26 +58,26 @@
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:text="Small Text"
-                            android:id="@+id/tv_drug_category"
+                            android:id="@+id/tv_user_email"
                             android:textSize="13dp" />
 
                         <TextView
-                            android:layout_below="@+id/tv_drug_category"
+                            android:layout_below="@+id/tv_user_email"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:text="Medium Text"
-                            android:id="@+id/tv_drug_title"
+                            android:id="@+id/tv_toilet_name"
                             android:textSize="16dp" />
 
                         <TextView
-                            android:id="@+id/tv_drug_company"
+                            android:id="@+id/tv_write_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/tv_drug_category"
+                            android:layout_below="@+id/tv_user_email"
                             android:layout_marginTop="7dp"
                             android:layout_marginLeft="8dp"
-                            android:layout_toRightOf="@+id/tv_drug_title"
+                            android:layout_toRightOf="@+id/tv_toilet_name"
                             android:text="Small Text"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textSize="10dp" />
@@ -164,37 +164,12 @@
                         android:id="@+id/tv_bad_content"
                         android:layout_below="@+id/thumb_down_image"/>
 
-
-                    <TextView
-                        android:id="@+id/tv_writer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/tv_bad_content"
-                        android:layout_marginTop="20dp"
-                        android:text="Small Text"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textSize="10dp" />
-
-                    <TextView
-                        android:id="@+id/tv_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/tv_bad_content"
-                        android:layout_toEndOf="@+id/tv_writer"
-                        android:layout_toRightOf="@+id/tv_writer"
-                        android:layout_marginLeft="6dp"
-                        android:layout_alignBaseline="@+id/tv_writer"
-                        android:text="Small Text"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textSize="6dp"
-                        />
-
                     <TextView
                         android:id="@+id/rating_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/tv_writer"
-                        android:layout_marginTop="3dp"
+                        android:layout_below="@+id/tv_bad_content"
+                        android:layout_marginTop="25dp"
                         android:text="평점"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textSize="10dp" />
@@ -205,11 +180,11 @@
                         android:theme="@style/RatingBar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
                         android:layout_toEndOf="@+id/rating_text"
                         android:layout_toRightOf="@+id/rating_text"
                         android:layout_marginLeft="5dp"
-                        android:layout_below="@id/tv_writer"
+                        android:layout_below="@+id/tv_bad_content"
+                        android:layout_marginTop="25dp"
                         android:stepSize="0.1"
                         android:isIndicator="true"
                         android:numStars="5"
@@ -220,8 +195,8 @@
                         android:id="@+id/rating_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_below="@+id/tv_writer"
+                        android:layout_below="@+id/tv_bad_content"
+                        android:layout_marginTop="25dp"
                         android:layout_toEndOf="@+id/ratingbar"
                         android:layout_toRightOf="@+id/ratingbar"
                         android:layout_alignBaseline="@+id/ratingbar"

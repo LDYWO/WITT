@@ -97,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnInfoW
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        final Intent user_intent = getIntent();
+
         boxMap = (LinearLayout)findViewById(R.id.boxMap);
         //LocationManager
         locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
@@ -147,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnInfoW
                         String rating = c.getString(TAG_RATING);
                         String latitude = c.getString(TAG_LATITUDE);
                         String longitude = c.getString(TAG_LONGITUDE);
+                        String toilet_id = c.getString("toilet_id");
 
                         if(getDistance(mLatitude,mLongitude,Double.valueOf(latitude),Double.valueOf(longitude))<1000){
 
@@ -156,6 +159,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnInfoW
                             toilets.put(TAG_TOILET_NAME, toilet_name);
                             toilets.put(TAG_OPEN_TIME, open_time);
                             toilets.put(TAG_RATING, rating);
+                            toilets.put("toilet_id",toilet_id);
+                            toilets.put("userEmail",user_intent.getStringExtra("userEmail"));
 
                             toilet_info_list.add(toilets);
                         }

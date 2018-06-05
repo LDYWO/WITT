@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         loginBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String userEmail = idText.getText().toString();
+                final String userEmail = idText.getText().toString();
                 String userPassword = passwordText.getText().toString();
 
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -49,6 +49,8 @@ public class LoginActivity extends AppCompatActivity {
                                         .create();
                                 dialog.show();
                                 Intent loginIntent = new Intent(LoginActivity.this, MainActivity.class); // Intent 전달을 이용한 액티비티 전환
+                                loginIntent.putExtra("userEmail",userEmail);
+                                loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 LoginActivity.this.startActivity(loginIntent);
                                 finish();
                             }

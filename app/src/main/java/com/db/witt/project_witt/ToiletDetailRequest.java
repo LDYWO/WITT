@@ -13,10 +13,10 @@ public class ToiletDetailRequest extends StringRequest {
     final static private String URL = "http://ec2-13-209-75-74.ap-northeast-2.compute.amazonaws.com/ToiletDetail.php";
     private Map<String, String> parameters;
 
-    public ToiletDetailRequest (String toiletname, Response.Listener<String> listener) {
+    public ToiletDetailRequest (String toilet_id, Response.Listener<String> listener) {
         super(Method.POST, URL, listener, null);
         parameters = new HashMap<>();
-        parameters.put("toilet_name", toiletname);
+        parameters.put("toilet_id", toilet_id);
     }
 
     @Override

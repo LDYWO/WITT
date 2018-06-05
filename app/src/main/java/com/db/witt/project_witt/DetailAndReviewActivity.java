@@ -1,11 +1,15 @@
 package com.db.witt.project_witt;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -16,10 +20,17 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DetailAndReviewActivity extends AppCompatActivity {
     JSONArray toilet_json_arr = null;
+    JSONArray review_json_arr = null;
+    JSONArray ratingAvg_json_arr = null;
+    Review_Detail_Adapter review_detail_adapter;
+    RecyclerView recyclerView;
+
+    ArrayList<HashMap<String,String>> review_list = new ArrayList<HashMap<String, String>>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +44,44 @@ public class DetailAndReviewActivity extends AppCompatActivity {
 
         final Intent toilet_intent = getIntent();
 
+        recyclerView = (RecyclerView) findViewById(R.id.rv);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(layoutManager);
+
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try{
                     JSONObject jsonObject = new JSONObject(response);
                     toilet_json_arr = jsonObject.getJSONArray("result");
+                    review_json_arr = jsonObject.getJSONArray("result2");
+                    ratingAvg_json_arr = jsonObject.getJSONArray("result3");
+                    JSONObject ratingavg_obj = ratingAvg_json_arr.getJSONObject(0);
+
+                    for (int i = 0; i < review_json_arr.length(); i++) {
+                        JSONObject c = review_json_arr.getJSONObject(i);
+                        String user_email = c.getString("review_userEmail");
+                        String toilet_name = c.getString("toilet_name");
+                        String write_date = c.getString("write_date");
+                        String good_review = c.getString("good_review");
+                        String bad_review = c.getString("bad_review");
+                        String rating = c.getString("review_rating");
+
+                        HashMap<String, String> reviews = new HashMap<String, String>();
+
+                        reviews.put("user_email", user_email);
+                        reviews.put("toilet_name", toilet_name);
+                        reviews.put("write_date", write_date);
+                        reviews.put("good_content", good_review);
+                        reviews.put("bad_content", bad_review);
+                        reviews.put("rating", rating);
+
+                        review_list.add(reviews);
+                    }
+                    review_detail_adapter = new Review_Detail_Adapter(getApplicationContext(),review_list);
+                    recyclerView.setAdapter(review_detail_adapter);
+                    review_detail_adapter.notifyDataSetChanged();
 
                     for (int i = 0; i < toilet_json_arr.length(); i++) {
                         JSONObject c = toilet_json_arr.getJSONObject(i);
@@ -58,7 +101,7 @@ public class DetailAndReviewActivity extends AppCompatActivity {
                         String management_name = c.getString("management_name");
                         String phone_number = c.getString("phone_number");
                         String open_time = c.getString("open_time");
-                        String rating = c.getString("rating");
+                        String rating = ratingavg_obj.getString("review_rating");
 
                         TextView name_tv = findViewById(R.id.toilet_name);
                         TextView toilet_address_tv = findViewById(R.id.toilet_address);
@@ -99,9 +142,24 @@ public class DetailAndReviewActivity extends AppCompatActivity {
                 }
             }
         };
-        String name = toilet_intent.getStringExtra("toilet_name");
-        ToiletDetailRequest toiletDetailRequest = new ToiletDetailRequest(name, responseListener);
+        String toilet_id = toilet_intent.getStringExtra("toilet_id");
+        ToiletDetailRequest toiletDetailRequest = new ToiletDetailRequest(toilet_id, responseListener);
         RequestQueue queue = Volley.newRequestQueue(DetailAndReviewActivity.this);
         queue.add(toiletDetailRequest);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(DetailAndReviewActivity.this,WriteReviewActivity.class);
+                intent.putExtra("toilet_address2", toilet_intent.getStringExtra("toilet_address2"));
+                intent.putExtra("toilet_name", toilet_intent.getStringExtra("toilet_name"));
+                intent.putExtra("open_time", toilet_intent.getStringExtra("open_time"));
+                intent.putExtra("toilet_id",toilet_intent.getStringExtra("toilet_id"));
+                intent.putExtra("userEmail",toilet_intent.getStringExtra("userEmail"));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
     }
 }
