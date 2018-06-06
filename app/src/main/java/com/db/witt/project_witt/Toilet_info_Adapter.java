@@ -56,6 +56,7 @@ public class Toilet_info_Adapter extends RecyclerView.Adapter<Toilet_info_Adapte
                     intent.putExtra("rating", toilet_info_List.get(pos).get("rating"));
                     intent.putExtra("toilet_id",toilet_info_List.get(pos).get("toilet_id"));
                     intent.putExtra("userEmail",toilet_info_List.get(pos).get("userEmail"));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 }

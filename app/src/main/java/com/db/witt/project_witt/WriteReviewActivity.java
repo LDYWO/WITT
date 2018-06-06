@@ -80,6 +80,8 @@ public class WriteReviewActivity extends AppCompatActivity {
 
     ImageView ivImage;
 
+    Intent toilet_intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +93,7 @@ public class WriteReviewActivity extends AppCompatActivity {
         //actionbar 객체 가져오기
         ActionBar actionBar = getSupportActionBar();
 
-        final Intent toilet_intent = getIntent();
+        toilet_intent = getIntent();
 
         name = toilet_intent.getStringExtra("toilet_name");
         address = toilet_intent.getStringExtra("toilet_address2");
@@ -380,6 +382,20 @@ public class WriteReviewActivity extends AppCompatActivity {
         byte [] b=baos.toByteArray();
         String temp= Base64.encodeToString(b, Base64.DEFAULT);
         return temp;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent=new Intent(WriteReviewActivity.this,DetailAndReviewActivity.class);
+        intent.putExtra("toilet_address2", toilet_intent.getStringExtra("toilet_address2"));
+        intent.putExtra("toilet_name", toilet_intent.getStringExtra("toilet_name"));
+        intent.putExtra("open_time", toilet_intent.getStringExtra("open_time"));
+        intent.putExtra("toilet_id",toilet_intent.getStringExtra("toilet_id"));
+        intent.putExtra("userEmail",toilet_intent.getStringExtra("userEmail"));
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
     }
 }
 

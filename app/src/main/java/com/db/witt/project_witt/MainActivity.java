@@ -58,12 +58,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements GoogleMap.OnInfoWindowClickListener,OnMapReadyCallback {
-
-    String myJSON;
 
     private static final String TAG_RESULTS = "result";
     private static final String TAG_TOILET_ADD = "toilet_address2";

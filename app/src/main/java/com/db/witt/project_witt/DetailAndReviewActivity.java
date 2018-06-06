@@ -49,6 +49,8 @@ public class DetailAndReviewActivity extends AppCompatActivity {
 
     private AlertDialog dialog;
 
+    Intent toilet_intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +59,8 @@ public class DetailAndReviewActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        toilet_intent = getIntent();
+
         final ToggleButton LikeBt = (ToggleButton)findViewById(R.id.LikeBt);
         LikeBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +68,7 @@ public class DetailAndReviewActivity extends AppCompatActivity {
                 if (LikeBt.isChecked()){
                     LikeBt.setBackgroundDrawable(getResources().getDrawable(R.drawable.like)); // Toggle 버튼 좋아요 상태로 전환
 
-                    Intent toilet_intent = getIntent();
+
                     String toilet_id = toilet_intent.getStringExtra("toilet_id");
 
                     Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -265,8 +269,10 @@ public class DetailAndReviewActivity extends AppCompatActivity {
                 intent.putExtra("open_time", toilet_intent.getStringExtra("open_time"));
                 intent.putExtra("toilet_id",toilet_intent.getStringExtra("toilet_id"));
                 intent.putExtra("userEmail",toilet_intent.getStringExtra("userEmail"));
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                overridePendingTransition(0, 0);
             }
         });
 
@@ -337,6 +343,20 @@ public class DetailAndReviewActivity extends AppCompatActivity {
                 Log.e("실패","설마...");
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent=new Intent(DetailAndReviewActivity.this,MainActivity.class);
+        intent.putExtra("toilet_address2", toilet_intent.getStringExtra("toilet_address2"));
+        intent.putExtra("toilet_name", toilet_intent.getStringExtra("toilet_name"));
+        intent.putExtra("open_time", toilet_intent.getStringExtra("open_time"));
+        intent.putExtra("toilet_id",toilet_intent.getStringExtra("toilet_id"));
+        intent.putExtra("userEmail",toilet_intent.getStringExtra("userEmail"));
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
     }
 
 }
