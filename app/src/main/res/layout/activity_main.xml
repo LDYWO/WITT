@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.db.witt.project_witt.MainActivity">
+    tools:context="com.db.witt.project_witt.Activity.MainActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -28,21 +28,9 @@
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"/>
     </android.support.v7.widget.Toolbar>
-
-    <LinearLayout
-        android:id="@+id/boxMap"
-        android:orientation="vertical"
+    <fragment
+        android:id="@+id/map"
+        class="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <fragment
-            android:id="@+id/map"
-            class="com.google.android.gms.maps.MapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="330dp" />
-        <android.support.v7.widget.RecyclerView
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:id="@+id/rv">
-        </android.support.v7.widget.RecyclerView>
-    </LinearLayout>
+        android:layout_height="match_parent" />
 </LinearLayout>
