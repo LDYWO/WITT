@@ -1,5 +1,6 @@
 package com.db.witt.project_witt.Activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -139,5 +140,15 @@ public class MyReviewActivity extends AppCompatActivity {
                 Log.i("Target:",target);
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent=new Intent(MyReviewActivity.this,MypageActivity.class);
+        intent.putExtra("userEmail",MainActivity.userEmail);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
     }
 }

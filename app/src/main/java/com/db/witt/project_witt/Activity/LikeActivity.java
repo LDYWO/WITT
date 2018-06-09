@@ -1,5 +1,6 @@
 package com.db.witt.project_witt.Activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.LinearLayout;
 
 import com.db.witt.project_witt.Adapter.Toilet_info_Adapter;
 import com.db.witt.project_witt.R;
@@ -99,6 +101,7 @@ public class LikeActivity extends AppCompatActivity {
                     String toilet_address2 = object.getString("toilet_address2");
                     String open_time = object.getString("open_time");
                     String rating = object.getString("rating_avg");
+                    String toilet_id = object.getString("toilet_id");
 
                     if(rating=="null")
                         rating="0";
@@ -110,6 +113,7 @@ public class LikeActivity extends AppCompatActivity {
                     likes.put("toilet_address2", toilet_address2);
                     likes.put("open_time", open_time);
                     likes.put("rating", rating);
+                    likes.put("toilet_id",toilet_id);
                     likes.put("likes","likes");
 
                     like_list.add(likes);
@@ -119,7 +123,7 @@ public class LikeActivity extends AppCompatActivity {
 
                 if (like_list.isEmpty()){
                     AlertDialog.Builder builder = new AlertDialog.Builder(LikeActivity.this);
-                    dialog = builder.setMessage("작성한 리뷰가 없습니다.\n리뷰를 작성해주세요.")
+                    dialog = builder.setMessage("좋아요한 목록이 없습니다.\n좋아요를 눌러 등록해주세요.")
                             .setPositiveButton("확인", null)
                             .create();
                     dialog.show();
@@ -134,5 +138,14 @@ public class LikeActivity extends AppCompatActivity {
                 Log.i("Target:",target);
             }
         }
+    }
+    @Override
+    public void onBackPressed() {
+        Intent intent=new Intent(LikeActivity.this,MypageActivity.class);
+        intent.putExtra("userEmail",MainActivity.userEmail);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
     }
 }

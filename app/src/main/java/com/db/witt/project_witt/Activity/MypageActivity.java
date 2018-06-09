@@ -142,4 +142,14 @@ public class MypageActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent=new Intent(MypageActivity.this,MainActivity.class);
+        intent.putExtra("userEmail",MainActivity.userEmail);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
 }

@@ -2,9 +2,12 @@ package com.db.witt.project_witt.Adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
@@ -17,7 +20,15 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+import com.db.witt.project_witt.Activity.MainActivity;
+import com.db.witt.project_witt.Activity.MypageActivity;
 import com.db.witt.project_witt.R;
+import com.db.witt.project_witt.Request.DeleteReviewRequest;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,8 +73,57 @@ public class Review_Detail_Adapter extends RecyclerView.Adapter<Review_Detail_Ad
         if(noticeItem.get("my_reviews")=="my_reviews"){
             holder.comment_img.setVisibility(View.INVISIBLE);
             holder.comment_button.setVisibility(View.INVISIBLE);
+            holder.delete_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("삭제하기")
+                            .setMessage("삭제 하시겠습니까?")
+                            .setCancelable(false) .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialog, int which)
+                        {
+                            final Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    try{
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        boolean success = jsonObject.getBoolean("success");
+                                        if(success){
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                            AlertDialog dialog = builder.setMessage("삭제 되었습니다.")
+                                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            Intent intent = new Intent(context, MypageActivity.class); // Intent 전달을 이용한 액티비티 전환
+                                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                            context.startActivity(intent);
+                                                        }
+                                                    })
+                                                    .create();
+                                            dialog.show();
+                                        }
+                                    }
+                                    catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+                            DeleteReviewRequest deleteReviewRequest = new DeleteReviewRequest(MainActivity.userEmail,noticeItem.get("review_id"), responseListener);
+                            RequestQueue queue = Volley.newRequestQueue(context);
+                            queue.add(deleteReviewRequest);
+                        }
+                    })
+                            .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                @Override public void onClick(DialogInterface dialog, int which)
+                                {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog dialog = builder.create(); dialog.show();
+                }
+            });
         }
         else{
+            holder.delete_button.setVisibility(View.INVISIBLE);
             holder.comment_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -89,7 +149,7 @@ public class Review_Detail_Adapter extends RecyclerView.Adapter<Review_Detail_Ad
         TextView rating_num;
         ImageView logo_image,comment_img;
 
-        Button comment_button;
+        Button comment_button,delete_button;
 
         CardView cv;
 
@@ -108,6 +168,7 @@ public class Review_Detail_Adapter extends RecyclerView.Adapter<Review_Detail_Ad
             comment_img = (ImageView)v.findViewById(R.id.comment_img);
 
             comment_button = (Button)v.findViewById(R.id.comment_button);
+            delete_button =(Button)v.findViewById(R.id.delete_button);
 
             cv = (CardView) v.findViewById(R.id.cv);
         }

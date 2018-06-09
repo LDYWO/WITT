@@ -74,8 +74,6 @@
                             android:text="Small Text"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textSize="10dp" />
-
-
                     </RelativeLayout>
 
                     <RelativeLayout

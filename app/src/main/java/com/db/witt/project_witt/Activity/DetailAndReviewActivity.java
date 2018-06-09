@@ -355,8 +355,7 @@ public class DetailAndReviewActivity extends AppCompatActivity {
         intent.putExtra("open_time", toilet_intent.getStringExtra("open_time"));
         intent.putExtra("toilet_id",toilet_intent.getStringExtra("toilet_id"));
         intent.putExtra("userEmail",toilet_intent.getStringExtra("userEmail"));
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         overridePendingTransition(0, 0);
     }
