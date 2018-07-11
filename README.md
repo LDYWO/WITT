@@ -3,8 +3,6 @@
 - Running Test at Device (Samsung Galaxy 7 Edge)
 - Database Project in Ajou University. (2018)
 
-***
-
 ## Using
 - Language : Android Java, Php, MySQL + AWS(EC2 + RDS)
 
